@@ -1699,8 +1699,8 @@ void afe_send_cal(u16 port_id)
 		if (ret < 0)
 			send_afe_cal_type(AFE_LSM_TX_CAL, port_id);
 	} else if (afe_get_port_type(port_id) == MSM_AFE_PORT_TYPE_RX) {
-		afe_send_cal_spkr_prot_rx(port_id);
 		send_afe_cal_type(AFE_COMMON_RX_CAL, port_id);
+		afe_send_cal_spkr_prot_rx(port_id);
 	}
 }
 
@@ -6739,7 +6739,6 @@ static int afe_get_service_ver(void)
 		pr_err("%s: q6core_get_service_version failed %d\n",
 		       __func__, ret);
 
-	kfree(ver_info);
 	return ret;
 }
 

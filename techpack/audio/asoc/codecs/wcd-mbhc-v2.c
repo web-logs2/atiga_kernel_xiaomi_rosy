@@ -1,5 +1,4 @@
 /* Copyright (c) 2015-2018, The Linux Foundation. All rights reserved.
- * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -307,8 +306,8 @@ out_micb_en:
 			/* enable pullup and cs, disable mb */
 			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_PULLUP);
 		else
-			/* Disable cs, pullup & enable micbias */
-			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
+			/* enable current source and disable mb, pullup*/
+			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_CS);
 
 		/* configure cap settings properly when micbias is disabled */
 		if (mbhc->mbhc_cb->set_cap_mode)
@@ -322,10 +321,13 @@ out_micb_en:
 		if (mbhc->hph_status & SND_JACK_OC_HPHL)
 			hphlocp_off_report(mbhc, SND_JACK_OC_HPHL);
 		clear_bit(WCD_MBHC_EVENT_PA_HPHL, &mbhc->event_state);
-
-		/* Disable cs, pullup & enable micbias */
-		wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
-
+		/* check if micbias is enabled */
+		if (micbias2)
+			/* Disable cs, pullup & enable micbias */
+			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
+		else
+			/* Disable micbias, pullup & enable cs */
+			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_CS);
 		mutex_unlock(&mbhc->hphl_pa_lock);
 		clear_bit(WCD_MBHC_ANC0_OFF_ACK, &mbhc->hph_anc_state);
 		break;
@@ -337,10 +339,13 @@ out_micb_en:
 		if (mbhc->hph_status & SND_JACK_OC_HPHR)
 			hphrocp_off_report(mbhc, SND_JACK_OC_HPHR);
 		clear_bit(WCD_MBHC_EVENT_PA_HPHR, &mbhc->event_state);
-
-		/* Disable cs, pullup & enable micbias */
-		wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
-
+		/* check if micbias is enabled */
+		if (micbias2)
+			/* Disable cs, pullup & enable micbias */
+			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_MB);
+		else
+			/* Disable micbias, pullup & enable cs */
+			wcd_enable_curr_micbias(mbhc, WCD_MBHC_EN_CS);
 		mutex_unlock(&mbhc->hphr_pa_lock);
 		clear_bit(WCD_MBHC_ANC1_OFF_ACK, &mbhc->hph_anc_state);
 		break;
